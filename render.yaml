@@ -1,0 +1,57 @@
+# render.yaml - Render Blueprint for automated multi-service deployment
+# Part B: Every git push to main triggers a new build and deploy
+
+services:
+  # ── Backend Service ────────────────────────────────────────────────────────
+  - type: web
+    name: be-todo
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    branch: main
+    autoDeploy: true        # Rebuild on every push to main
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: todo-db
+          property: host
+      - key: DB_USER
+        fromDatabase:
+          name: todo-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: todo-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: todo-db
+          property: database
+      - key: DB_PORT
+        fromDatabase:
+          name: todo-db
+          property: port
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+
+  # ── Frontend Service ───────────────────────────────────────────────────────
+  - type: web
+    name: fe-todo
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+    branch: main
+    autoDeploy: true        # Rebuild on every push to main
+    envVars:
+      - key: API_URL
+        fromService:
+          name: be-todo
+          type: web
+          property: host
+
+# ── Managed PostgreSQL Database ────────────────────────────────────────────
+databases:
+  - name: todo-db
+    databaseName: tododb
+    user: todouser
+    plan: free

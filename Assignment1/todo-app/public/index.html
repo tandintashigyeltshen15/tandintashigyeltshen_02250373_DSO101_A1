@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do App Deployment Assignment</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1, h2, h3 {
+      color: #2a7ae2;
+    }
+    code {
+      background: #e0e0e0;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+    pre {
+      background: #e0e0e0;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    .section {
+      background: #fff;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    img {
+      max-width: 100%;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    a {
+      color: #2a7ae2;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>To-Do App Deployment Assignment</h1>
+
+  <div class="section">
+    <h2>1. Project Overview</h2>
+    <p>This assignment involves creating a simple To-Do Web App with frontend, backend, and database, then deploying it using Docker and Render. It also includes automating deployment through GitHub.</p>
+    <ul>
+      <li><strong>Frontend:</strong> React UI with Add, Edit, Delete tasks functionality</li>
+      <li><strong>Backend:</strong> Node.js + Express API with CRUD operations</li>
+      <li><strong>Database:</strong> PostgreSQL on Render</li>
+      <li><strong>Deployment:</strong> Docker images pushed to Docker Hub, deployed on Render</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>2. Database Setup</h2>
+    <p>Created PostgreSQL database on Render:</p>
+    <ul>
+      <li><strong>Service Name:</strong> todo-db</li>
+      <li><strong>Database Name:</strong> tododb_abc123 (auto-generated)</li>
+      <li><strong>Credentials:</strong> Use <code>DATABASE_URL</code> for connection</li>
+    </ul>
+    <p>Environment Variables for backend:</p>
+    <pre>
+DATABASE_URL=postgres://user:password@dpg-abc123.render.com:5432/tododb_abc123
+PORT=5000
+    </pre>
+    <p><em>Note:</em> Do not push .env file to GitHub.</p>
+    <img src="https://i.imgur.com/6O7B8Xm.png" alt="Render PostgreSQL Dashboard Example">
+  </div>
+
+  <div class="section">
+    <h2>3. Backend Setup</h2>
+    <p>Connected Node.js backend to PostgreSQL using <code>pg</code> library:</p>
+    <pre>
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+module.exports = pool;
+    </pre>
+    <p>APIs implemented:</p>
+    <ul>
+      <li>GET /tasks</li>
+      <li>POST /tasks</li>
+      <li>PUT /tasks/:id</li>
+      <li>DELETE /tasks/:id</li>
+    </ul>
+    <img src="https://i.imgur.com/xUd2nXG.png" alt="Postman API Test Example">
+  </div>
+
+  <div class="section">
+    <h2>4. Dockerization</h2>
+    <h3>Backend Dockerfile</h3>
+    <pre>
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 5000
+CMD ["node", "server.js"]
+    </pre>
+    <h3>Frontend Dockerfile</h3>
+    <pre>
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["npx", "serve", "-s", "build"]
+    </pre>
+    <p>Docker commands used:</p>
+    <pre>
+# Build backend
+docker build -t tandintashigyeltshen/be-todo:02250373 .
+
+# Push backend
+docker push tandintashigyeltshen/be-todo:02250373
+
+# Build frontend
+docker build -t tandintashigyeltshen/fe-todo:02250373 .
+
+# Push frontend
+docker push tandintashigyeltshen/fe-todo:02250373
+    </pre>
+    <img src="https://i.imgur.com/7rOye5u.png" alt="Docker Hub Repository Example">
+  </div>
+
+  <div class="section">
+    <h2>5. Render Deployment</h2>
+    <p>Backend Service:</p>
+    <ul>
+      <li>Image: <code>tandintashigyeltshen/be-todo:02250373</code></li>
+      <li>Environment Variables: DATABASE_URL, PORT</li>
+    </ul>
+    <p>Frontend Service:</p>
+    <ul>
+      <li>Image: <code>tandintashigyeltshen/fe-todo:02250373</code></li>
+      <li>Environment Variable: REACT_APP_API_URL=https://be-todo.onrender.com</li>
+    </ul>
+    <img src="https://i.imgur.com/N5FUKlj.png" alt="Render Deployment Example">
+  </div>
+
+  <div class="section">
+    <h2>6. Automation (render.yaml)</h2>
+    <pre>
+services:
+  - type: web
+    name: be-todo
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        value: postgres://user:password@dpg-abc123.render.com:5432/tododb_abc123
+      - key: PORT
+        value: 5000
+
+  - type: web
+    name: fe-todo
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://be-todo.onrender.com
+    </pre>
+    <p>Push to GitHub → Connect repo to Render → Automatic deployment occurs on each commit.</p>
+  </div>
+
+  <div class="section">
+    <h2>7. Frontend Screenshot</h2>
+    <p>UI showing task creation and listing:</p>
+    <img src="https://i.imgur.com/Nk5fjR7.png" alt="To-Do App UI Example">
+  </div>
+
+  <div class="section">
+    <h2>8. Live Links</h2>
+    <ul>
+      <li>Frontend URL: <a href="https://fe-todo.onrender.com" target="_blank">https://fe-todo.onrender.com</a></li>
+      <li>Backend URL: <a href="https://be-todo.onrender.com" target="_blank">https://be-todo.onrender.com</a></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>9. References</h2>
+    <ul>
+      <li>Render Documentation: <a href="https://render.com/docs" target="_blank">https://render.com/docs</a></li>
+      <li>Docker Docs: <a href="https://docs.docker.com/" target="_blank">https://docs.docker.com/</a></li>
+      <li>Node.js & Express: <a href="https://expressjs.com/" target="_blank">https://expressjs.com/</a></li>
+      <li>PostgreSQL: <a href="https://www.postgresql.org/docs/" target="_blank">https://www.postgresql.org/docs/</a></li>
+    </ul>
+  </div>
+
+</body>
+</html>

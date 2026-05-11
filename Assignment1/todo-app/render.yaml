@@ -1,0 +1,80 @@
+<<<<<<< HEAD
+# render.yaml - Render Blueprint for automated multi-service deployment
+# Part B: Every git push to main triggers a new build and deploy
+
+services:
+  # ── Backend Service ────────────────────────────────────────────────────────
+=======
+services:
+>>>>>>> 4e9f7a652adff2174ea54b7c496581feb69e2a0e
+  - type: web
+    name: be-todo
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+<<<<<<< HEAD
+    branch: main
+    autoDeploy: true        # Rebuild on every push to main
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: todo-db
+          property: host
+      - key: DB_USER
+        fromDatabase:
+          name: todo-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: todo-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: todo-db
+          property: database
+      - key: DB_PORT
+        fromDatabase:
+          name: todo-db
+          property: port
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+
+  # ── Frontend Service ───────────────────────────────────────────────────────
+=======
+    envVars:
+      - key: DB_HOST
+        value: dpg-d720qmhr0fns738rhalg-a
+      - key: DB_USER
+        value: tandin
+      - key: DB_PASSWORD
+        value: vHp5SxtA55DdLnLiDL3fZdOyqEAXu2Nz
+      - key: PORT
+        value: 5000
+
+>>>>>>> 4e9f7a652adff2174ea54b7c496581feb69e2a0e
+  - type: web
+    name: fe-todo
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+<<<<<<< HEAD
+    branch: main
+    autoDeploy: true        # Rebuild on every push to main
+    envVars:
+      - key: API_URL
+        fromService:
+          name: be-todo
+          type: web
+          property: host
+
+# ── Managed PostgreSQL Database ────────────────────────────────────────────
+databases:
+  - name: todo-db
+    databaseName: tododb
+    user: todouser
+    plan: free
+=======
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://fe-todo-02250373-4.onrender.com
+>>>>>>> 4e9f7a652adff2174ea54b7c496581feb69e2a0e

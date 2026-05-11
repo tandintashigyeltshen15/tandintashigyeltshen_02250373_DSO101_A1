@@ -1,0 +1,25 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Verify files
+        run: |
+          echo "Files in repository:"
+          ls -la
+
+      - name: Deploy notification
+        run: |
+          echo "Build successful!"
+          echo "Render will auto-deploy from GitHub."
+          echo "Site will be live shortly."

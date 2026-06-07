@@ -1,7 +1,7 @@
 # Assignment 3B - Flask App Deployment
 
 ## Live URL
-[Click here](YOUR_RENDER_URL_HERE)
+https://lask-app-02250373.onrender.com
 
 ## Steps Taken
 1. Created Flask web application

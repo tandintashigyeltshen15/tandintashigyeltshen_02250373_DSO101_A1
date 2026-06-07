@@ -1,7 +1,8 @@
 # Assignment 3 - Static Site Deployment
 
 ## Live URL
-[Click here](YOUR_RENDER_URL_HERE)
+
+https://static-site-02250373.onrender.com
 
 ## Steps Taken
 1. Created HTML/CSS static website

@@ -1,10 +1,7 @@
-# My First Web App Deployment
-
-## Overview
-A static website deployed using GitHub Actions and Render.
+# Assignment 3 - Static Site Deployment
 
 ## Live URL
-[Click here to view](YOUR_RENDER_URL_HERE)
+[Click here](YOUR_RENDER_URL_HERE)
 
 ## Steps Taken
 1. Created HTML/CSS static website

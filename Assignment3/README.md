@@ -16,3 +16,5 @@ A static website deployed using GitHub Actions and Render.
 - GitHub
 - GitHub Actions
 - Render
+
+- Updated to trigger workflow.
